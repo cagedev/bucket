@@ -2,14 +2,31 @@
 <html>
 
 <head>
-    <title>LaTeX builder bucket</title>
+  <title>LaTeX builder bucket</title>
 </head>
 
 <nav>
+  <ul>
+    <li> auth
+      <ul>
+        <li><a href="{{ url_for('auth.login') }}">auth.login()</a></li>
+      </ul>
+    </li>
+    <li> editor
+      <ul>
+        <li><a href="{{ url_for('editor.latex_editor') }}">editor.latex_editor()</a></li>
+      </ul>
+    </li>
+    <li> main
+      <ul>
+        <li><a href="{{ url_for('main.index') }}">main.index()</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
 
 <body>
-    {% block content %}{% endblock %}
+  {% block content %}{% endblock %}
 </body>
 
 </html>
