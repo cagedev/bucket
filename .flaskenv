@@ -1,0 +1,1 @@
+FLASK_APP="bucket:create_app()"
