@@ -32,6 +32,7 @@ Model:
 
   - Document
     - createdBy
+    - location
     - output_file (String filename)
     - input_file (String filename)
     
@@ -48,5 +49,17 @@ docker run -v /var/run/docker.sock:/var/run/docker.sock ...
 ```
 To be able to start other docker images
 
-### Proof of concept
-Single page flask app that runs a blocking default build command in an anonymous directory and returns the created pdf. 
+
+## Roadmap (status)
+ - [x] proof-of-concept: Single page flask app that runs a blocking default build command in an anonymous directory and returns the created pdf.
+ - [ ] user-login: Provide a user management system
+ - [ ] snippets: ...
+ - [ ] compilation:
+ - [ ] object sharing:
+ - [ ] frontend: ...
+
+
+## Installation (TODO)
+ - install dependencies: `pip install -r requirements.txt`
+ - create instance location
+ - create database: `flask db init; flask db migrate; flask db upgrade`
