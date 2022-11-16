@@ -1,7 +1,7 @@
 from pathlib import Path
 from flask import render_template
 
-from bucket.main import bp
+from app.main import bp
 
 
 @bp.route('/', methods=['GET', 'POST'])

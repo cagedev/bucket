@@ -1,6 +1,6 @@
 from flask import request, send_file
 
-from bucket.api import bp
+from app.api import bp
 
 
 @bp.route('/file', methods=['GET'])

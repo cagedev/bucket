@@ -3,8 +3,8 @@ from pathlib import Path
 from uuid import uuid4
 from flask import render_template, url_for, request
 
-from bucket.editor import bp
-from bucket.editor.forms import LatexEditorForm
+from app.editor import bp
+from app.editor.forms import LatexEditorForm
 
 # TODO: Setup paths in config
 # TODO: Use instance object to overwrite

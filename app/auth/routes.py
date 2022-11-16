@@ -1,7 +1,7 @@
 from flask import render_template, redirect
 
-from bucket.auth import bp
-from bucket.auth.forms import LoginForm
+from app.auth import bp
+from app.auth.forms import LoginForm
 
 
 @bp.route('/login', methods=['GET', 'POST'])
