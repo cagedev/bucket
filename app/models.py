@@ -1,5 +1,6 @@
-from flask_login import UserMixin
+from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 from app import db, login
 
@@ -23,3 +24,15 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+class Snippet(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created_by_id = db.Column(db.Integer)
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_modified = db.Column(db.DateTime, default=datetime.utcnow)
+    description = db.Column(db.String(240))
+    content = db.Column(db.String(3000))
+
+    def __repr__(self):
+        return f'<Snippet {self.id}>'

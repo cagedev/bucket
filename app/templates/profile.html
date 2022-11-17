@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<tt>
+    {<br />
+    {% for key, value in user.__dict__.items() %}
+    &nbsp;&nbsp;&nbsp;&nbsp;{{key}}: {{value}}<br />
+    {% endfor %}
+    }<br />
+</tt>
+
+
+{% endblock %}

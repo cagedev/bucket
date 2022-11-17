@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<tt>
+    <!-- <ul> -->
+    [<br />
+    {% for snippet in snippets %}
+    <!-- <li> -->
+    &nbsp;&nbsp;{<br />
+    {% for key, value in snippet.__dict__.items() %}
+        <a href="{{ url_for('editor.snippet', id=snippet.id) }}">
+            &nbsp;&nbsp;&nbsp;&nbsp;{{key}}: {{value}}
+        </a><br />
+    {% endfor %}
+    &nbsp;&nbsp;},<br />
+    <!-- </li> -->
+    {% endfor %}
+    ]<br />
+    <!-- </ul>> -->
+</tt>
+
+{% endblock %}
