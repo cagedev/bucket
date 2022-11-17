@@ -29,6 +29,9 @@ def create_app(config_class=Config):
     from app.editor import bp as edit_bp
     app.register_blueprint(edit_bp, url_prefix='/editor')
 
+    from app.home import bp as home_bp
+    app.register_blueprint(home_bp, url_prefix='/user')
+
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 

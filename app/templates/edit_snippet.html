@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="" method="post" enctype="multipart/form-data">
+
+    {{ form.hidden_tag() }}
+
+    <p>
+        snippet.id={{ snippet.id }}<br />
+        snippet.created_by = {{ snippet.created_by_id }}<br />
+        snippet.created = {{ snippet.created }}<br />
+        snippet.last_modified = {{ snippet.last_modified }}<br />
+    </p>
+
+    <p>
+        {{ form.description.label }}<br />
+        {{ form.description() }}
+    </p>
+
+    <p>
+        {{ form.content.label }}<br />
+        {{ form.content() }}
+    </p>
+
+    <p>
+        {{ form.save }}
+    </p>
+
+</form>
+
+
+{% endblock %}

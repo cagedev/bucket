@@ -1,10 +1,14 @@
 import docker
+from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
-from flask import render_template, url_for, request
+from flask import render_template, url_for, redirect, request
+from flask_login import login_required
 
+from app import db
 from app.editor import bp
-from app.editor.forms import LatexEditorForm
+from app.editor.forms import LatexEditorForm, SnippetEditorForm
+from app.models import Snippet
 
 # TODO: Setup paths in config
 # TODO: Use instance object to overwrite
@@ -15,6 +19,11 @@ TEMPLATE_DIR = Path(INSTANCE_DIR, 'test')
 
 USERDATA_DIR = Path(INSTANCE_DIR, 'userdata')
 BUILD_DIR = Path(USERDATA_DIR, 'build')
+
+snippet_template = """\subsection*{Math}
+\\begin{displaymath}
+  \int_0^\infty e^{-st}f(t)dt
+\end{displaymath}"""
 
 
 # TODO: Split into editor (editor blueprint) route and submithandler (api route)
@@ -67,3 +76,31 @@ def latex_editor():
         return f'[ <a href={url_for("api.get_file", filename=filename)}>output.pdf</a> ]'
 
         # return send_file(Path(build_dir, 'file.pdf'))
+
+
+@bp.route('/snippet/', defaults={'id': None}, methods=['GET', 'POST'])
+@bp.route('/snippet/<id>', methods=['GET', 'POST'])
+@login_required
+def snippet(id):
+    form = SnippetEditorForm()
+    snippet = Snippet()
+
+    if id == None:
+        db.session.add(snippet)
+        db.session.commit()
+        print('id=', snippet.id)
+        return redirect(url_for('editor.snippet', id=snippet.id))
+    else:
+        snippet = Snippet.query.get(int(id))
+
+    if form.validate_on_submit():
+        # add snippet to database
+
+        # for _ in form:
+        form.populate_obj(snippet)
+        db.session.add(snippet)
+        db.session.commit()
+
+    form = SnippetEditorForm(obj=snippet)
+
+    return render_template('edit_snippet.html', form=form, snippet=snippet)

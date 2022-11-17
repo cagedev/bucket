@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField, SubmitField
+from wtforms import TextAreaField, SubmitField, StringField
 
 tex_template = """\documentclass[12pt]{article}
 \\begin{document}
@@ -22,7 +22,21 @@ viverra vel tortor nec cursus.
 \end{document}
 """
 
+
 class LatexEditorForm(FlaskForm):
-    text = TextAreaField('Area', default=tex_template,
+    text = TextAreaField('Area',
+                         default=tex_template,
                          render_kw={'rows': 25, 'cols': 90})
     submit = SubmitField('Submit')
+
+
+class SnippetEditorForm(FlaskForm):
+    # id = StringField('id')
+    # created_by = StringField('created_by')
+    # created = StringField('created')
+    # last_modified = StringField('last_modified')
+    description = TextAreaField('description',
+                                render_kw={'rows': 5, 'cols': 90})
+    content = TextAreaField('content',
+                            render_kw={'rows': 25, 'cols': 90})
+    save = SubmitField('Save')
