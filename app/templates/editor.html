@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h1>Hello, {{ user.username }}</h1>
+<h1>Hello, {{ 'Anonymous' if current_user.is_anonymous else current_user.username }}</h1>
 
 <form action="" method="post" enctype="multipart/form-data">
 

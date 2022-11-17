@@ -52,8 +52,8 @@ To be able to start other docker images
 
 ## Roadmap (status)
  - [x] proof-of-concept: Single page flask app that runs a blocking default build command in an anonymous directory and returns the created pdf.
- - [ ] user-login: Provide a user management system
- - [ ] snippets: ...
+ - [x] user-login: Provide a user management system
+ - [ ] snippets: User profile and data management
  - [ ] compilation:
  - [ ] object sharing:
  - [ ] frontend: ...
