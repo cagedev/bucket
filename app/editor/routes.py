@@ -8,7 +8,7 @@ from flask_login import login_required
 from app import db
 from app.editor import bp
 from app.editor.forms import LatexEditorForm, SnippetEditorForm
-from app.models import Snippet
+from app.models import Snippet, Tag
 
 # TODO: Setup paths in config
 # TODO: Use instance object to overwrite
@@ -75,6 +75,7 @@ def latex_editor():
         # return link to build
         return f'[ <a href={url_for("api.get_file", filename=filename)}>output.pdf</a> ]'
 
+        # BUG: send_file fails due to nonexistent file -> wait?
         # return send_file(Path(build_dir, 'file.pdf'))
 
 
@@ -94,13 +95,23 @@ def snippet(id):
         snippet = Snippet.query.get(int(id))
 
     if form.validate_on_submit():
-        # add snippet to database
 
-        # BUG: form.populate_obj 
+        # BUG: form.populate_obj
         #  - overwrite values with None for unrendered fields
-        #  - stringified datetime-objects are not cast back correctly  
-        form.populate_obj(snippet)
-        # for _ in form:
+        #  - stringified datetime-objects are not cast back correctly
+        # form.populate_obj(snippet)
+        snippet.description = form.description.data
+        snippet.content = form.content.data
+
+        tags_list = form.tags.data.split(',')
+        for tag_name in tags_list:
+            t = Tag.query.filter_by(name=tag_name).first()
+            if t == None:
+                t = Tag(name=tag_name)
+            # BUG: Creates new tag even if it exists -> require unique?
+            snippet.tags.append(t)
+
+        # Add snippet to database
         db.session.add(snippet)
         db.session.commit()
 

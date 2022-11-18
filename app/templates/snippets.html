@@ -7,12 +7,15 @@
     [<br />
     {% for snippet in snippets %}
     <!-- <li> -->
-    &nbsp;&nbsp;{<br />
+    <a href="{{ url_for('editor.snippet', id=snippet.id) }}">X</a>&nbsp;{<br />
     {% for key, value in snippet.__dict__.items() %}
-        <a href="{{ url_for('editor.snippet', id=snippet.id) }}">
-            &nbsp;&nbsp;&nbsp;&nbsp;{{key}}: {{value}}
-        </a><br />
+    &nbsp;&nbsp;&nbsp;&nbsp;"{{key}}": "{{value}}"<br />
     {% endfor %}
+    &nbsp;&nbsp;&nbsp;&nbsp;[<br />
+    {% for tag in snippet.tags %}
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ url_for('home.snippets', tag_name=tag.name) }}">{{tag.name}}</a><br />
+    {% endfor %}
+    &nbsp;&nbsp;&nbsp;&nbsp;]<br />
     &nbsp;&nbsp;},<br />
     <!-- </li> -->
     {% endfor %}

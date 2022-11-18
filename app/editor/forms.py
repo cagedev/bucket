@@ -36,7 +36,8 @@ class SnippetEditorForm(FlaskForm):
     # created = StringField('created')
     # last_modified = StringField('last_modified')
     description = TextAreaField('description',
-                                render_kw={'rows': 5, 'cols': 90})
+                                render_kw={'rows': 4, 'cols': 90})
     content = TextAreaField('content',
-                            render_kw={'rows': 25, 'cols': 90})
+                            render_kw={'rows': 20, 'cols': 90})
+    tags = StringField('tags')
     save = SubmitField('Save')

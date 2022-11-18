@@ -26,6 +26,13 @@ def load_user(id):
     return User.query.get(int(id))
 
 
+snippet_tag = db.Table(
+    'snippet_tag',
+    db.Column('snippet_id', db.Integer, db.ForeignKey('snippet.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
+)
+
+
 class Snippet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_by_id = db.Column(db.Integer)
@@ -34,15 +41,10 @@ class Snippet(db.Model):
     description = db.Column(db.String(240))
     content = db.Column(db.String(3000))
 
+    tags = db.relationship('Tag', secondary=snippet_tag, backref='snippets')
+
     def __repr__(self):
         return f'<Snippet {self.id}>'
-
-
-snippet_tag = db.Table(
-    'snippet_tag',
-    db.Column('snippet_id', db.Integer, db.ForeignKey('snippet.id')),
-    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
-)
 
 
 class Tag(db.Model):
