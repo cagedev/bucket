@@ -96,8 +96,11 @@ def snippet(id):
     if form.validate_on_submit():
         # add snippet to database
 
-        # for _ in form:
+        # BUG: form.populate_obj 
+        #  - overwrite values with None for unrendered fields
+        #  - stringified datetime-objects are not cast back correctly  
         form.populate_obj(snippet)
+        # for _ in form:
         db.session.add(snippet)
         db.session.commit()
 

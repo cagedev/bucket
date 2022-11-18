@@ -36,3 +36,18 @@ class Snippet(db.Model):
 
     def __repr__(self):
         return f'<Snippet {self.id}>'
+
+
+snippet_tag = db.Table(
+    'snippet_tag',
+    db.Column('snippet_id', db.Integer, db.ForeignKey('snippet.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
+)
+
+
+class Tag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+
+    def __repr__(self):
+        return f'<Tag "{self.name}">'
