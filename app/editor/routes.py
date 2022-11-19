@@ -103,6 +103,8 @@ def snippet(id):
         snippet.description = form.description.data
         snippet.content = form.content.data
 
+        # TODO: created_by -> one-to-many
+
         tags_list = form.tags.data.split(',')
         for tag_name in tags_list:
             t = Tag.query.filter_by(name=tag_name).first()

@@ -54,9 +54,28 @@ To be able to start other docker images
  - [x] proof-of-concept: Single page flask app that runs a blocking default build command in an anonymous directory and returns the created pdf.
  - [x] user-login: Provide a user management system
  - [ ] snippets: User profile and data management
- - [ ] compilation:
- - [ ] object sharing:
- - [ ] frontend: ...
+   - [x] snippet creation and saving
+   - [x] snippet tagging
+   - [ ] snippet duplication
+   - [ ] snippet deletion
+   - [ ] snippet ownership
+   - [ ] image inclusion
+   - [ ] data export
+ - [ ] document composition
+   - [ ] document object definition
+   - [ ] insert from snippets (use tag filtering)
+   - [ ] insert new snippet
+   - [ ] document sharing
+ - [ ] frontend
+   - [ ] code editor
+     - options: [codemirror](https://codemirror.net/), [monaco](https://microsoft.github.io/monaco-editor/), **[codejar](https://medv.io/codejar/)**
+     - notes: 
+       - codemirror does not support latex (possibly through a highlighter)
+       - codejar requires an externalhighlighter (highlightjs or **prismjs**)
+       - monaco does not support mobile web
+   - [ ] tag selector
+ - [ ] api
+   - [ ] 
 
 
 ## Installation (TODO)
