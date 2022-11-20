@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 from flask import render_template, url_for, redirect, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from app import db
 from app.editor import bp
@@ -87,7 +87,7 @@ def snippet(id):
     snippet = Snippet()
 
     if id == None:
-        db.session.add(snippet)
+        db.session.add(snippet = Snippet(created_by=current_user))
         db.session.commit()
         print('id=', snippet.id)
         return redirect(url_for('editor.snippet', id=snippet.id))
@@ -111,6 +111,7 @@ def snippet(id):
             if t == None:
                 t = Tag(name=tag_name)
             # BUG: Creates new tag even if it exists -> require unique?
+            # TODO: Remove old tags
             snippet.tags.append(t)
 
         # Add snippet to database

@@ -58,7 +58,7 @@ To be able to start other docker images
    - [x] snippet tagging
    - [ ] snippet duplication
    - [ ] snippet deletion
-   - [ ] snippet ownership
+   - [x] snippet ownership
    - [ ] image inclusion
    - [ ] data export
  - [ ] document composition

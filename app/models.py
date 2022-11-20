@@ -11,6 +11,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(128), index=True, unique=True)
     password_hash = db.Column(db.String(128))
 
+    snippets = db.relationship('Snippet', backref='created_by')
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -35,11 +37,12 @@ snippet_tag = db.Table(
 
 class Snippet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    created_by_id = db.Column(db.Integer)
     created = db.Column(db.DateTime, default=datetime.utcnow)
-    last_modified = db.Column(db.DateTime, default=datetime.utcnow)
+    last_modified = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.now())
     description = db.Column(db.String(240))
     content = db.Column(db.String(3000))
+
+    created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     tags = db.relationship('Tag', secondary=snippet_tag, backref='snippets')
 

@@ -3,35 +3,37 @@
 {% block content %}
 
 <form action="" method="post" enctype="multipart/form-data">
+    <tt>
 
-    {{ form.hidden_tag() }}
+        {{ form.hidden_tag() }}
 
-    <p>
-        snippet.id={{ snippet.id }}<br />
-        snippet.created_by = {{ snippet.created_by_id }}<br />
-        snippet.created = {{ snippet.created }}<br />
-        snippet.last_modified = {{ snippet.last_modified }}<br />
-    </p>
+        <p>
+            snippet.id={{ snippet.id }}<br />
+            snippet.created_by = {{ snippet.created_by }}<br />
+            snippet.created = {{ snippet.created }}<br />
+            snippet.last_modified = {{ snippet.last_modified }}<br />
+        </p>
 
-    <p>
-        {{ form.description.label }}<br />
-        {{ form.description() }}
-    </p>
+        <p>
+            {{ form.description.label }}<br />
+            {{ form.description() }}
+        </p>
 
-    <p>
-        {{ form.tags.label }}<br />
-        {{ form.tags() }}
-    </p>
+        <p>
+            {{ form.tags.label }}<br />
+            {{ form.tags() }}
+        </p>
 
-    <p>
-        {{ form.content.label }}<br />
-        {{ form.content() }}
-    </p>
+        <p>
+            {{ form.content.label }}<br />
+            {{ form.content() }}
+        </p>
 
-    <p>
-        {{ form.save }}
-    </p>
+        <p>
+            {{ form.save }}
+        </p>
 
+    </tt>
 </form>
 
 
