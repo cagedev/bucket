@@ -1,6 +1,6 @@
 from flask import request, send_file
 
-from app.api import bp
+from flaskapp.blueprints.api import bp
 
 
 @bp.route('/file', methods=['GET'])

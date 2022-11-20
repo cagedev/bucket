@@ -2,7 +2,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
-from app import db, login
+from flaskapp import db, login
 
 
 class User(UserMixin, db.Model):
@@ -38,7 +38,8 @@ snippet_tag = db.Table(
 class Snippet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)
-    last_modified = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.now())
+    last_modified = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.now())
     description = db.Column(db.String(240))
     content = db.Column(db.String(3000))
 

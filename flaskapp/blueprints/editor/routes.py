@@ -5,10 +5,10 @@ from uuid import uuid4
 from flask import render_template, url_for, redirect, request
 from flask_login import login_required, current_user
 
-from app import db
-from app.editor import bp
-from app.editor.forms import LatexEditorForm, SnippetEditorForm
-from app.models import Snippet, Tag
+from flaskapp import db
+from flaskapp.blueprints.editor import bp
+from flaskapp.blueprints.editor.forms import LatexEditorForm, SnippetEditorForm
+from flaskapp.models import Snippet, Tag
 
 # TODO: Setup paths in config
 # TODO: Use instance object to overwrite

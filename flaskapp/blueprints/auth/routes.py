@@ -1,10 +1,10 @@
 from flask import render_template, redirect, url_for
 from flask_login import current_user, login_user, logout_user
 
-from app import db
-from app.auth import bp
-from app.auth.forms import LoginForm, RegisterForm
-from app.models import User
+from flaskapp import db
+from flaskapp.blueprints.auth import bp
+from flaskapp.blueprints.auth.forms import LoginForm, RegisterForm
+from flaskapp.models import User
 
 
 @bp.route('/login', methods=['GET', 'POST'])

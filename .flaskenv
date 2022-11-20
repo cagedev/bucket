@@ -1,1 +1,1 @@
-FLASK_APP="app:create_app()"
+FLASK_APP="flaskapp:create_app()"

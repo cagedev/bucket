@@ -2,8 +2,8 @@ from pathlib import Path
 from flask import render_template
 from flask_login import login_required, current_user
 
-from app.home import bp
-from app.models import User, Snippet, Tag
+from flaskapp.blueprints.home import bp
+from flaskapp.models import User, Snippet, Tag
 
 
 @bp.route('/home', methods=['GET', 'POST'])
