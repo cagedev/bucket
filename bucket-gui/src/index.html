@@ -3,14 +3,31 @@
 
 <head>
     <title>__TITLE__</title>
-    <script src="./bundle.js" type="module"></script>
-    <link rel="stylesheet" href="./bundle.css">
+    <!-- <script src="./bundle.js" type="module"></script> -->
+    <script src="/static/bundle.js" type="module"></script>
+    <!-- <link rel="stylesheet" href="./bundle.css"> -->
+    <link rel="stylesheet" href="/static/bundle.css">
 </head>
 
 <body>
     <h1>__TITLE__</h1>
 
-    <latex-editor></latex-editor>
+
+    <!-- flask template -->
+    <form action="#" method="post" enctype="multipart/form-data">
+
+        {{ form.hidden_tag() }}
+
+        <latex-editor value="{{snippet.content}}" name="editor-field"></latex-editor>
+
+        {{ form.text }}
+
+        <p>
+            {{ form.submit }}
+        </p>
+
+    </form>
+    <!-- flask /template -->
 
 </body>
 
