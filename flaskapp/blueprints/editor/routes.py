@@ -26,9 +26,21 @@ snippet_template = """\subsection*{Math}
 \end{displaymath}"""
 
 
-# TODO: Split into editor (editor blueprint) route and submithandler (api route)
 @bp.route('/latex_editor', methods=['GET', 'POST'])
 def latex_editor():
+    user = {'username': 'Johnny'}
+    snippet_id = 8
+    snippet = Snippet.query.get(snippet_id)
+    form = LatexEditorForm()
+    if request.method == 'GET':
+        return render_template('latex_editor.html', form=form, user=user, snippet=snippet)
+    if request.method == 'POST':
+        return f'{request.form}'
+
+
+# TODO: Split into editor (editor blueprint) route and submithandler (api route)
+@bp.route('/latex_editor_flask', methods=['GET', 'POST'])
+def latex_editor_flask():
     form = LatexEditorForm()
     user = {'username': 'Johnny'}
     if request.method == 'GET':
@@ -87,7 +99,7 @@ def snippet(id):
     snippet = Snippet()
 
     if id == None:
-        db.session.add(snippet = Snippet(created_by=current_user))
+        db.session.add(snippet=Snippet(created_by=current_user))
         db.session.commit()
         print('id=', snippet.id)
         return redirect(url_for('editor.snippet', id=snippet.id))
