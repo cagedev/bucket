@@ -1,0 +1,1 @@
+../../bucket-gui/build/bundle.js
