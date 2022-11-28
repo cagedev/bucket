@@ -67,15 +67,31 @@ To be able to start other docker images
    - [ ] insert new snippet
    - [ ] document sharing
  - [ ] frontend
-   - [ ] code editor
-     - options: [codemirror](https://codemirror.net/), [monaco](https://microsoft.github.io/monaco-editor/), **[codejar](https://medv.io/codejar/)**
-     - notes: 
+   - [x] latex editor
+     - custom component
+     - currently using codemirror
+     - options: 
+       - [codemirror](https://codemirror.net/), 
+       - [monaco](https://microsoft.github.io/monaco-editor/),
+       - [codejar](https://medv.io/codejar/)
+     - notes:
        - codemirror does not support latex (possibly through a highlighter)
-       - codejar requires an externalhighlighter (highlightjs or **prismjs**)
+       - codejar requires an externalhighlighter (highlightjs or prismjs)
        - monaco does not support mobile web
+     - custom components don't seem to be submittable:(
+   - [ ] document composer
+     - [ ] file format definition
+       - [ ] json object
+         - header
+         - snippet-array
+         - footer
+     - [ ] (desktop-only) inline snippet editor
+       - expand to edit, close to save (status feedback!)
+     - [ ] snippet search and insert
    - [ ] tag selector
  - [ ] api
-   - [ ] 
+   - [ ] snippet CRUD(s)
+   - [ ] document CRUD(s)
 
 
 ## Installation (TODO)
