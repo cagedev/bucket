@@ -8,6 +8,9 @@ import { tag } from "./quick-tag";
 const template = tag('template', {
     innerHTML: `
     <style>
+        :host {
+            border: 1px solid red;
+        }
         .cm-wrap {
             border: 1px solid darkblue;
         }
@@ -16,8 +19,16 @@ const template = tag('template', {
     `
 })
 
-
+/**
+ * Custom HTMLElement containing a LaTeX-customized CodeMirror6 instance.
+ * 
+ * @class
+ */
 export class LatexEditor extends HTMLElement {
+
+    // Make LatexEditor form-associated
+    static formAssociated = true;
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -35,8 +46,46 @@ export class LatexEditor extends HTMLElement {
                 })
             ],
             parent: myParent,
-        })
+        });
+
+        this._value = '';
+        this._internals = this.attachInternals();
+    }
+
+    connectedCallback() {
+        console.log('connectedCallback()');
+        let _form = this._internals.form;
+        _form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            console.log(Object.fromEntries(Array.from(_form.elements).map((element) => { return [element.name, element.value] })));
+        });
+        this._value = this.hasAttribute('value') ? this.getAttribute('value') : '';
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        console.log(name, oldValue, newValue);
+    }
+
+    get value() {
+        return this._value;
+    }
+
+    set value(val) {
+        this._value = val;
+    }
+
+    get form() {
+        return this._internals.form;
+    }
+
+    get name() {
+        return this.getAttribute('name');
+    }
+
+    static get observedAttributes() {
+        return ['name', 'value'];
     }
 }
 
+// Make the "latex-editor" tag available
 customElements.define('latex-editor', LatexEditor)
