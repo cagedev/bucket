@@ -19,6 +19,13 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email
+        }
+
     def __repr__(self):
         return f'<User {self.username}>'
 
@@ -47,6 +54,47 @@ class Snippet(db.Model):
 
     tags = db.relationship('Tag', secondary=snippet_tag, backref='snippets')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'created': self.created,
+            'last_modified': self.last_modified,
+            'description': self.description,
+            'content': self.content,
+        }
+
+    def __repr__(self):
+        return f'<Snippet {self.id}>'
+
+
+document_tag = db.Table(
+    'document_tag',
+    db.Column('document_id', db.Integer, db.ForeignKey('document.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
+)
+
+
+class Document(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_modified = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.now())
+    description = db.Column(db.String(240))
+    content = db.Column(db.String(3000))  # list of snippets?
+
+    created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    tags = db.relationship('Tag', secondary=document_tag, backref='documents')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'created': self.created,
+            'last_modified': self.last_modified,
+            'description': self.description,
+            'content': self.content,
+        }
+
     def __repr__(self):
         return f'<Snippet {self.id}>'
 
@@ -54,6 +102,12 @@ class Snippet(db.Model):
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
 
     def __repr__(self):
         return f'<Tag "{self.name}">'
