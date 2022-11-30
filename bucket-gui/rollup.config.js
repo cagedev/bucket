@@ -3,29 +3,50 @@ import css from 'rollup-plugin-import-css';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
 
-export default {
-    input: './src/index.js',
+export default [
+    {
+        input: './src/widgets/html_latex_editor/index.js',
 
-    output: {
-        file: './build/bundle.js',
-        format: 'es',
-    },
+        output: {
+            file: './build/htexedit/bundle.js',
+            format: 'es',
+        },
 
-    plugins: [
-        copy({
-            targets: [
-                {
-                    src: './src/index.html',
-                    dest: './build',
-                    transform: (contents, filename) => {
-                        return contents.toString().replaceAll('__TITLE__', 'Bucket LaTeX Editor')
+        plugins: [
+            copy({
+                targets: [
+                    {
+                        src: './src/widgets/html_latex_editor/index.html',
+                        dest: './build/htexedit',
+                        transform: (contents, filename) => {
+                            return contents.toString().replaceAll('__TITLE__', 'Bucket LaTeX Editor')
+                        }
                     }
-                }
-            ]
-        }),
-        css(),
-        nodeResolve(),
-    ],
+                ]
+            }),
+            css(),
+            nodeResolve(),
+        ],
+    },
+    {
+        input: './src/widgets/ajax_snippet_editor/index.js',
 
-    // watch: true,
-};
+        output: {
+            file: './build/atexedit/bundle.js',
+            format: 'es',
+        },
+
+        plugins: [
+            copy({
+                targets: [
+                    {
+                        src: './src/widgets/ajax_snippet_editor/index.html',
+                        dest: './build/atexedit',
+                    }
+                ]
+            }),
+            css(),
+            nodeResolve(),
+        ],
+    },
+];
