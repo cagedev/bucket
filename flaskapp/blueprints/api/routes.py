@@ -1,6 +1,6 @@
 from flask import request, send_file, jsonify
 
-from flaskapp.models import Document, User, Snippet
+from flaskapp.models import Document, User, Snippet, Tag
 from flaskapp.blueprints.api import bp
 
 
@@ -9,6 +9,8 @@ def get_file():
     filename = request.args.get('filename')
     return send_file(filename)
 
+
+# TODO: User authentication and retrieval(use JWT?)
 
 # API Spec
 # TODO: GET /v1/_openapi
@@ -43,8 +45,8 @@ def get_user(id: int):
 
 
 # Snippet Routes
-# TODO: GET  /snippet/all
-#       RETURN [snippet]
+# GET  /snippet/all
+#      RETURN [snippet]
 # TODO: POST /snippet
 #       CREATE and RETURN new snippet
 # GET  /snippet/<id>
@@ -52,9 +54,46 @@ def get_user(id: int):
 # TODO: PUT  /snippet/<id>
 #       UPDATE and RETURN document
 
-@bp.route('/snippet/<int:id>')
-def get_snippet(id: int):
-    """Retrieve a Snippet
+
+@bp.route('/snippet/all', methods=['GET'])
+def get_snippets() -> str:
+    """Retrieve an array of Snippets based on filters provided by request arguments.
+    Arguments may be defined multiple times; _all_ parameters are required to be present.
+
+    Available arguments:
+        tag=<tagname>
+
+    Examples:
+        /all 
+            return all available Snippets
+
+        /all?tag=a
+            return all Snippets containing Tag(name='a')
+
+        /all?tag=a&tag=b
+            return all Snippets containing Tag(name='a') and Tag(name='b')
+
+    Returns:
+        str: JSON-serialized array of Snippet objects
+    """
+
+    # The 'tag=<tagname>' argument may be provided multiple times, retrieve all as an array
+    tagnames = request.args.getlist('tag')
+
+    snippets = Snippet.query
+
+    # Require all tags to be present
+    for tagname in tagnames:
+        snippets = snippets.filter(Snippet.tags.any(Tag.name == tagname))
+
+    snippets = snippets.all()
+
+    return jsonify([snippet.to_dict() for snippet in snippets])
+
+
+@bp.route('/snippet/<int:id>', methods=['GET'])
+def get_snippet(id: int) -> str:
+    """Retrieve a Snippet by id
 
     Args:
         id (int): snippet id
