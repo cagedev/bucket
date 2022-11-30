@@ -99,7 +99,8 @@ def snippet(id):
     snippet = Snippet()
 
     if id == None:
-        db.session.add(snippet=Snippet(created_by=current_user))
+        # db.session.add(snippet=Snippet(created_by=current_user))
+        db.session.add(Snippet(created_by=current_user))
         db.session.commit()
         print('id=', snippet.id)
         return redirect(url_for('editor.snippet', id=snippet.id))
