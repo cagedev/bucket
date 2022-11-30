@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
 
     snippets = db.relationship('Snippet', backref='created_by')
+    documents = db.relationship('Document', backref='created_by')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
