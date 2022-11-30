@@ -9,10 +9,13 @@ const template = tag('template', {
     innerHTML: `
     <style>
         :host {
-            border: 1px solid red;
-        }
-        .cm-wrap {
-            border: 1px solid darkblue;
+            border: 2px solid purple;
+            border-radius: 4px;
+            padding: 4px;
+            display: block;
+            height: 100%;
+            width: 100%;
+            margin-bottom: 4px;
         }
     </style>
     <div id="editor-container"></div>
@@ -54,11 +57,6 @@ export class LatexEditor extends HTMLElement {
 
     connectedCallback() {
         console.log('connectedCallback()');
-        let _form = this._internals.form;
-        _form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            console.log(Object.fromEntries(Array.from(_form.elements).map((element) => { return [element.name, element.value] })));
-        });
         this._value = this.hasAttribute('value') ? this.getAttribute('value') : '';
     }
 
