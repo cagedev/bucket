@@ -23,7 +23,9 @@ class User(UserMixin, db.Model):
         return {
             'id': self.id,
             'username': self.username,
-            'email': self.email
+            'email': self.email,
+
+            'snippets': [snippet.to_dict() for snippet in self.snippets],
         }
 
     def __repr__(self):
@@ -61,6 +63,8 @@ class Snippet(db.Model):
             'last_modified': self.last_modified,
             'description': self.description,
             'content': self.content,
+
+            'tags': [tag.to_dict() for tag in self.tags],
         }
 
     def __repr__(self):
@@ -93,6 +97,8 @@ class Document(db.Model):
             'last_modified': self.last_modified,
             'description': self.description,
             'content': self.content,
+
+            'tags': [tag.to_dict() for tag in self.tags],
         }
 
     def __repr__(self):
@@ -109,5 +115,8 @@ class Tag(db.Model):
             'name': self.name,
         }
 
+    # def __repr__(self):
+    #     return f'<Tag "{self.name}">'
+
     def __repr__(self):
-        return f'<Tag "{self.name}">'
+        return self.name
