@@ -1,5 +1,8 @@
-from flask import request, send_file, jsonify
+from flask import request, send_file, redirect, url_for
+from flask.json import jsonify
+from flask.wrappers import Response
 
+from flaskapp import db
 from flaskapp.models import Document, User, Snippet, Tag
 from flaskapp.blueprints.api import bp
 
@@ -18,10 +21,10 @@ def get_file():
 # User Routes
 # TODO: GET  /user/all
 #       RETURN [user]
-# TODO: POST /user/
-#       CREATE and RETURN new user
 # GET  /user/<id>
 #      RETURN user
+# TODO: POST /user/
+#       CREATE and RETURN new user
 # TODO: GET  /user/<id>/documents
 #       RETURN [user.document]
 # TODO: GET  /user/<id>/snippets
@@ -32,14 +35,14 @@ def get_file():
 # RETURN user
 
 @bp.route('/user/<int:id>')
-def get_user(id: int):
+def get_user(id: int) -> Response:
     """Retrieve a User
 
     Args:
         id (int): User id
 
     Returns:
-        json: JSON-serialized User object
+        Response: JSON-serialized User object
     """
     return jsonify(User.query.get_or_404(id).to_dict())
 
@@ -47,16 +50,16 @@ def get_user(id: int):
 # Snippet Routes
 # GET  /snippet/all
 #      RETURN [snippet]
-# TODO: POST /snippet
-#       CREATE and RETURN new snippet
 # GET  /snippet/<id>
 #      RETURN snippet
+# TODO: POST /snippet
+#       CREATE and RETURN new snippet
 # TODO: PUT  /snippet/<id>
 #       UPDATE and RETURN document
 
 
 @bp.route('/snippet/all', methods=['GET'])
-def get_snippets() -> str:
+def get_snippets() -> Response:
     """Retrieve an array of Snippets based on filters provided by request arguments.
     Arguments may be defined multiple times; _all_ parameters are required to be present.
 
@@ -74,7 +77,7 @@ def get_snippets() -> str:
             return all Snippets containing Tag(name='a') and Tag(name='b')
 
     Returns:
-        str: JSON-serialized array of Snippet objects
+        Response: JSON-serialized array of Snippet objects
     """
 
     # The 'tag=<tagname>' argument may be provided multiple times, retrieve all as an array
@@ -92,36 +95,49 @@ def get_snippets() -> str:
 
 
 @bp.route('/snippet/<int:id>', methods=['GET'])
-def get_snippet(id: int) -> str:
+def get_snippet(id: int) -> Response:
     """Retrieve a Snippet by id
 
     Args:
         id (int): snippet id
 
     Returns:
-        json: JSON-serialized Snippet object
+        Response: JSON-serialized Snippet object
     """
     return jsonify(Snippet.query.get_or_404(id).to_dict())
+
+
+@bp.route('/snippet/', methods=['POST'])
+def create_snippet() -> None:
+    # TODO: Authentication
+    # DEBUG: Use User(id=1) as the current user
+    current_user = User.query.get(1)
+
+    snippet = Snippet(created_by=current_user)
+    db.session.add(snippet)
+    db.session.commit()
+    return redirect(url_for('get_snippet', id=snippet.id))
+
 
 
 # Document Routes
 # TODO: GET  /document/all
 #       RETURN [document]
-# TODO: POST /document
-#       CREATE and RETURN new document
 # TODO: GET  /document/<id>
 #       RETURN document
+# TODO: POST /document
+#       CREATE and RETURN new document
 # TODO: PUT  /document/<id>
 #       UPDATE and RETURN document
 
 @bp.route('/document/<int:id>')
-def get_document(id: int):
+def get_document(id: int) -> Response:
     """Retrieve a Document
 
     Args:
         id (int): Document id
 
     Returns:
-        json: JSON-serialized Document object
+        Response: JSON-serialized Document object
     """
     return jsonify(Document.query.get_or_404(id).to_dict())
