@@ -34,7 +34,7 @@ def get_file():
 # GET  /user/<id>
 # RETURN user
 
-@bp.route('/user/<int:id>')
+@bp.route('/user/<int:id>', methods=['GET'])
 def get_user(id: int) -> Response:
     """Retrieve a User
 
@@ -107,8 +107,13 @@ def get_snippet(id: int) -> Response:
     return jsonify(Snippet.query.get_or_404(id).to_dict())
 
 
-@bp.route('/snippet/', methods=['POST'])
-def create_snippet() -> None:
+@bp.route('/snippet', methods=['POST'])
+def create_snippet() -> Response:
+    """Create a new Snippet and redirect to return the new Snippet
+
+    Returns:
+        Response: redirect
+    """
     # TODO: Authentication
     # DEBUG: Use User(id=1) as the current user
     current_user = User.query.get(1)
@@ -116,15 +121,14 @@ def create_snippet() -> None:
     snippet = Snippet(created_by=current_user)
     db.session.add(snippet)
     db.session.commit()
-    return redirect(url_for('get_snippet', id=snippet.id))
-
+    return redirect(url_for('.get_snippet', id=snippet.id))
 
 
 # Document Routes
 # TODO: GET  /document/all
 #       RETURN [document]
-# TODO: GET  /document/<id>
-#       RETURN document
+# GET  /document/<id>
+#      RETURN document
 # TODO: POST /document
 #       CREATE and RETURN new document
 # TODO: PUT  /document/<id>
@@ -141,3 +145,20 @@ def get_document(id: int) -> Response:
         Response: JSON-serialized Document object
     """
     return jsonify(Document.query.get_or_404(id).to_dict())
+
+
+@bp.route('/document', methods=['POST'])
+def create_document() -> Response:
+    """Create a new Document and redirect to return the new Document
+
+    Returns:
+        Response: redirect
+    """
+    # TODO: Authentication
+    # DEBUG: Use User(id=1) as the current user
+    current_user = User.query.get(1)
+
+    document = Document(created_by=current_user)
+    db.session.add(document)
+    db.session.commit()
+    return redirect(url_for('.get_document', id=document.id))
