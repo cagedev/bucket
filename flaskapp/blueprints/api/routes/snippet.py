@@ -15,8 +15,8 @@ bp = Blueprint('snippet', __name__)
 #      RETURN snippet
 # POST /snippet
 #      CREATE and RETURN new snippet
-# TODO: PUT  /snippet/<id>
-#       UPDATE and RETURN document
+# PUT  /snippet/<id>
+#      UPDATE and RETURN document
 
 
 @bp.route('/all', methods=['GET'])
@@ -60,7 +60,7 @@ def get_snippet(id: int) -> Response:
     """Retrieve a Snippet by id
 
     Args:
-        id (int): snippet id
+        id (int): Snippet id
 
     Returns:
         Response: JSON-serialized Snippet object
@@ -86,7 +86,15 @@ def create_snippet() -> Response:
 
 
 @bp.route('/<int:id>', methods=['PUT'])
-def edit_snippet(id: int):
+def update_snippet(id: int) -> Response:
+    """Update an existing Snippet
+
+    Args:
+        id (int): Snippet id
+
+    Returns:
+        Response: redirect
+    """
     payload = request.get_json()
     snippet = Snippet.query.get(id)
 
