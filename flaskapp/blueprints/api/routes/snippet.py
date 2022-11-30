@@ -3,7 +3,7 @@ from flask.json import jsonify
 from flask.wrappers import Response
 
 from flaskapp import db
-from flaskapp.models import User, Snippet
+from flaskapp.models import User, Snippet, Tag
 
 bp = Blueprint('snippet', __name__)
 
@@ -13,8 +13,8 @@ bp = Blueprint('snippet', __name__)
 #      RETURN [snippet]
 # GET  /snippet/<id>
 #      RETURN snippet
-# TODO: POST /snippet
-#       CREATE and RETURN new snippet
+# POST /snippet
+#      CREATE and RETURN new snippet
 # TODO: PUT  /snippet/<id>
 #       UPDATE and RETURN document
 
@@ -83,3 +83,40 @@ def create_snippet() -> Response:
     db.session.add(snippet)
     db.session.commit()
     return redirect(url_for('.get_snippet', id=snippet.id))
+
+
+@bp.route('/<int:id>', methods=['PUT'])
+def edit_snippet(id: int):
+    payload = request.get_json()
+    snippet = Snippet.query.get(id)
+
+    # fields = ['description', 'content']
+    # TODO: Do this programmatically based on a update array
+    snippet.description = payload['description']
+    snippet.content = payload['content']
+
+    # TODO: Do this in a better way than set intersection
+    new_tags = set(payload['tags'])
+    old_tags = {tag.name for tag in snippet.tags}
+
+    tags_to_remove = old_tags - new_tags
+    tags_to_add = new_tags - old_tags
+
+    # Remove old tags, save new tags
+    for tag in tags_to_remove:
+        # TODO: Make tags unique
+        t = Tag.query.filter_by(name=tag).first()
+        snippet.tags.remove(t)
+
+    # Add new tags, check for duplicates
+    for tag in tags_to_add:
+        t = Tag.query.filter_by(name=tag).first()
+        if t == None:
+            t = Tag(name=tag)
+        snippet.tags.append(t)
+
+    # Update snippet in database
+    db.session.add(snippet)
+    db.session.commit()
+
+    return redirect(url_for('.get_snippet', id=id))
