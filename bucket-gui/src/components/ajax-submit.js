@@ -107,6 +107,7 @@ export class AjaxSubmit extends HTMLElement {
         Array.from(this._internals.form.elements).forEach((element) => {
             // Set data if there is a coressponding form element 
             console.log(element.name)
+            // BUG: If field is empty this evaluates to False
             if (payload[element.name]) {
                 element.value = payload[element.name];
             }
