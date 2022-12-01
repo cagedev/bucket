@@ -12,9 +12,11 @@
 <body>
 
     <div class="container">
-        <form>
-            <latex-editor></latex-editor>
-            <ajax-submit></ajax-submit>
+        <form action="" id="snippet-editor-form">
+            <input type="text" class="full-width" value="http://192.168.1.41:8888/api/snippet/2" id="form-action-placeholder"/>
+            <textarea class="full-width" name="description"></textarea>
+            <latex-editor name="content" value=""></latex-editor>
+            <ajax-submit name="submit-button"></ajax-submit>
         </form>
     </div>
 
