@@ -100,31 +100,35 @@ def update_snippet(id: int) -> Response:
 
     # fields = ['description', 'content']
     # TODO: Do this programmatically based on a update array
-    snippet.description = payload['description']
-    snippet.content = payload['content']
+    if 'description' in payload:
+        snippet.description = payload['description']
+    if 'content' in payload:
+        snippet.content = payload['content']
 
     # TODO: Do this in a better way than set intersection
-    new_tags = set(payload['tags'])
-    old_tags = {tag.name for tag in snippet.tags}
+    if 'tags' in payload:
+        new_tags = set(payload['tags'])
+        old_tags = {tag.name for tag in snippet.tags}
 
-    tags_to_remove = old_tags - new_tags
-    tags_to_add = new_tags - old_tags
+        tags_to_remove = old_tags - new_tags
+        tags_to_add = new_tags - old_tags
 
-    # Remove old tags, save new tags
-    for tag in tags_to_remove:
-        # TODO: Make tags unique
-        t = Tag.query.filter_by(name=tag).first()
-        snippet.tags.remove(t)
+        # Remove old tags, save new tags
+        for tag in tags_to_remove:
+            # TODO: Make tags unique
+            t = Tag.query.filter_by(name=tag).first()
+            snippet.tags.remove(t)
 
-    # Add new tags, check for duplicates
-    for tag in tags_to_add:
-        t = Tag.query.filter_by(name=tag).first()
-        if t == None:
-            t = Tag(name=tag)
-        snippet.tags.append(t)
+        # Add new tags, check for duplicates
+        for tag in tags_to_add:
+            t = Tag.query.filter_by(name=tag).first()
+            if t == None:
+                t = Tag(name=tag)
+            snippet.tags.append(t)
 
     # Update snippet in database
     db.session.add(snippet)
     db.session.commit()
 
-    return redirect(url_for('.get_snippet', id=id))
+    # Don't redirect but directly call correct route
+    return get_snippet(id=id)
