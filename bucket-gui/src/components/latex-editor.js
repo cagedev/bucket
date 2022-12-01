@@ -37,7 +37,7 @@ export class LatexEditor extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
         let myParent = this.shadowRoot.getElementById('editor-container');
-        let editor = new EditorView({
+        this.editor = new EditorView({
             extensions: [
                 basicSetup,
                 StreamLanguage.define(stex),
@@ -46,7 +46,11 @@ export class LatexEditor extends HTMLElement {
                     "&": { maxHeight: "500px" },
                     ".cm-scroller": { overflow: "auto" },
                     ".cm-content, .cm-gutter": { minHeight: "200px" }
+                }),
+                EditorView.updateListener.of((event) => {
+                    this._value = event.state.doc.toString();
                 })
+
             ],
             parent: myParent,
         });
@@ -55,21 +59,14 @@ export class LatexEditor extends HTMLElement {
         this._internals = this.attachInternals();
     }
 
-    connectedCallback() {
-        console.log('connectedCallback()');
-        this._value = this.hasAttribute('value') ? this.getAttribute('value') : '';
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        console.log(name, oldValue, newValue);
-    }
-
     get value() {
         return this._value;
     }
 
     set value(val) {
+        // console.log('set value(', val,')')
         this._value = val;
+        this._syncEditorContents()
     }
 
     get form() {
@@ -82,6 +79,17 @@ export class LatexEditor extends HTMLElement {
 
     static get observedAttributes() {
         return ['name', 'value'];
+    }
+
+    _syncEditorContents() {
+        let update = this.editor.state.update({
+            changes: {
+                from: 0,
+                to: this.editor.state.doc.length,
+                insert: this._value,
+            }
+        });
+        this.editor.update([update]);
     }
 }
 
