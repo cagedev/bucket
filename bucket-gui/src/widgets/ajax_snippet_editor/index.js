@@ -2,6 +2,7 @@ import "./container.css"
 
 import { LatexEditor } from "../../components/latex-editor";
 import { AjaxSubmit } from "../../components/ajax-submit";
+import { LabelSelector } from "../../components/label-selector";
 
 // TODO: This should be done in the custom form
 document.addEventListener('DOMContentLoaded', () => {
