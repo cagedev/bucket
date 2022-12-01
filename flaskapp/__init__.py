@@ -2,12 +2,14 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_cors import CORS
 
 from flaskapp.config import Config
 
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
+cors = CORS()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -16,6 +18,8 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)
     login.init_app(app)
+    # cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
+    cors.init_app(app)
 
     # app.redis = Redis.from_url(app.config['REDIS_URL'])
     # app.task_queue = rq.Queue(app.config['REDIS_QUEUE'], connection=app.redis)
