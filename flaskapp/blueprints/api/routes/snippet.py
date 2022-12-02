@@ -96,6 +96,7 @@ def update_snippet(id: int) -> Response:
         Response: redirect
     """
     payload = request.get_json()
+    print(payload)
     snippet = Snippet.query.get(id)
 
     # fields = ['description', 'content']
@@ -107,7 +108,8 @@ def update_snippet(id: int) -> Response:
 
     # TODO: Do this in a better way than set intersection
     if 'tags' in payload:
-        new_tags = set(payload['tags'])
+        new_tags = set([tag['name'] for tag in payload['tags']])
+        print(new_tags)
         old_tags = {tag.name for tag in snippet.tags}
 
         tags_to_remove = old_tags - new_tags
