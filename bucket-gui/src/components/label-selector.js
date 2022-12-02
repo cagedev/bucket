@@ -66,13 +66,11 @@ export class LabelSelector extends HTMLElement {
 
     get value() {
         return this._labels;
-        // return this._value;
     }
 
     set value(val) {
         this._value = JSON.stringify(val);
         this._labels = val
-        // console.log(this._value)
         this._renderLabels()
     }
 
@@ -91,37 +89,34 @@ export class LabelSelector extends HTMLElement {
     _renderLabels() {
         // Delete old labels first
         Array.from(this._labelContainer.children).forEach((c) => { this._labelContainer.removeChild(c) });
-        // Take this._value -> this_labels
-        // let labels = JSON.parse(this._value);
+
+        // Add all labels from this._labels into container
         this._labels.forEach((label) => {
             let labelTag = tag('span', { innerHTML: `<b>${label.name} [x]</b>`, classList: ['label'] })
             this._labelContainer.appendChild(labelTag);
+
+            // Event listener for removal (need to append first!)
             labelTag.addEventListener('click', (event) => {
                 this._removeLabel(label.name)
             })
         });
-        // console.log("synclabels", this._value);
     }
 
     _addLabel(value) {
-        // let labels = JSON.parse(this._value);
         this._labels.push({ name: value })
         this._value = JSON.stringify(this._labels);
         this._renderLabels()
-        // console.log(`add label (${value})`)
     }
 
     _removeLabel(tagValue) {
-        // let labels = JSON.parse(this._value);
         this._labels = this._labels.filter((value, index, array) => {
             return value.name != tagValue;
         })
         this._value = JSON.stringify(this._labels);
         this._renderLabels()
-        // console.log(`add label (${value})`)
     }
 
 }
 
-// Make the "latex-editor" tag available
+// Make the "label-selector" tag available
 customElements.define('label-selector', LabelSelector)
