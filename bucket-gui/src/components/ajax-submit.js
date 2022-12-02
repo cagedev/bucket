@@ -59,6 +59,8 @@ export class AjaxSubmit extends HTMLElement {
 
     sendPayload(payload) {
         let target = this._internals.form.action;
+        console.log('sendPayload()->')
+        console.log(payload)
         fetch(target, {
             method: 'PUT',
             headers: {
