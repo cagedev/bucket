@@ -84,6 +84,7 @@ export class LabelSelector extends HTMLElement {
     }
 
     _syncLabels() {
+        // TODO: Delete old labels first
         // Take this._value -> this_labels
         let labels = JSON.parse(this._value);
         labels.forEach((label) => {
