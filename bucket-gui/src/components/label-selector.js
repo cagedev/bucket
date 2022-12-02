@@ -40,7 +40,7 @@ export class LabelSelector extends HTMLElement {
         this.shadowRoot.appendChild(template.content.cloneNode(true));
         this._labelContainer = this.shadowRoot.getElementById('selected-labels');
         this._labelInput = this.shadowRoot.getElementById('label-input');
-        this._value = '';
+        this._value = '[]';
         this._labels = [];
         this._internals = this.attachInternals();
     }
@@ -51,24 +51,29 @@ export class LabelSelector extends HTMLElement {
             if (event.key == 'Enter') {
                 console.log(event.key);
                 this._addLabel(this._labelInput.value)
+                this._labelInput.value = ''
             }
         });
         this._labelInput.addEventListener('keydown', (event) => {
             if (event.key == 'Tab') {
                 event.preventDefault();
                 this._addLabel(this._labelInput.value)
+                this._labelInput.value = ''
             }
         });
 
     }
 
     get value() {
-        return this._value;
+        return this._labels;
+        // return this._value;
     }
 
     set value(val) {
         this._value = JSON.stringify(val);
-        this._syncLabels()
+        this._labels = val
+        // console.log(this._value)
+        this._renderLabels()
     }
 
     get form() {
@@ -83,19 +88,39 @@ export class LabelSelector extends HTMLElement {
         return ['name', 'value'];
     }
 
-    _syncLabels() {
-        // TODO: Delete old labels first
+    _renderLabels() {
+        // Delete old labels first
+        Array.from(this._labelContainer.children).forEach((c) => { this._labelContainer.removeChild(c) });
         // Take this._value -> this_labels
-        let labels = JSON.parse(this._value);
-        labels.forEach((label) => {
-            this._labelContainer.appendChild(tag('span', { innerHTML: `<b>${label.name} [x]</b>`, classList: ['label'] }));
+        // let labels = JSON.parse(this._value);
+        this._labels.forEach((label) => {
+            let labelTag = tag('span', { innerHTML: `<b>${label.name} [x]</b>`, classList: ['label'] })
+            this._labelContainer.appendChild(labelTag);
+            labelTag.addEventListener('click', (event) => {
+                this._removeLabel(label.name)
+            })
         });
-        console.log("synclabels", this._value);
+        // console.log("synclabels", this._value);
     }
 
     _addLabel(value) {
-        console.log(`add label (${value})`)
+        // let labels = JSON.parse(this._value);
+        this._labels.push({ name: value })
+        this._value = JSON.stringify(this._labels);
+        this._renderLabels()
+        // console.log(`add label (${value})`)
     }
+
+    _removeLabel(tagValue) {
+        // let labels = JSON.parse(this._value);
+        this._labels = this._labels.filter((value, index, array) => {
+            return value.name != tagValue;
+        })
+        this._value = JSON.stringify(this._labels);
+        this._renderLabels()
+        // console.log(`add label (${value})`)
+    }
+
 }
 
 // Make the "latex-editor" tag available
