@@ -49,4 +49,25 @@ export default [
             nodeResolve(),
         ],
     },
+    {
+        input: './src/widgets/ajax_document_editor/index.js',
+
+        output: {
+            file: './build/adocedit/bundle.js',
+            format: 'es',
+        },
+
+        plugins: [
+            copy({
+                targets: [
+                    {
+                        src: './src/widgets/ajax_document_editor/index.html',
+                        dest: './build/adocedit',
+                    }
+                ]
+            }),
+            css(),
+            nodeResolve(),
+        ],
+    },
 ];
