@@ -1,6 +1,8 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.orderinglist import ordering_list
 
 from flaskapp import db, login
 
@@ -56,6 +58,9 @@ class Snippet(db.Model):
     created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     tags = db.relationship('Tag', secondary=snippet_tag, backref='snippets')
+    documents_association = db.relationship(
+        'DocumentSnippet', back_populates='snippet')
+    documents = association_proxy('documents_association', 'document')
 
     def to_dict(self):
         return {
@@ -78,6 +83,33 @@ document_tag = db.Table(
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
 )
 
+# document_snippet = db.Table(
+#     'document_snippet',
+#     db.Column('document_id', db.Integer, db.ForeignKey('document.id')),
+#     db.Column('snippet_id', db.Integer, db.ForeignKey('snippet.id')),
+#     db.Column('index', db.Integer)
+# )
+
+
+class DocumentSnippet(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    document_id = db.Column(db.Integer, db.ForeignKey('document.id'))
+    snippet_id = db.Column(db.Integer, db.ForeignKey('snippet.id'))
+    index = db.Column(db.Integer)
+
+    document = db.relationship(
+        'Document', back_populates='snippets_association')
+    snippet = db.relationship(
+        'Snippet', back_populates='documents_association')
+
+    def __init__(self, document=None, snippet=None, index=None, **kwargs):
+        if document is not None:
+            kwargs['document'] = document
+        if snippet is not None:
+            kwargs['snippet'] = snippet
+        if index is not None:
+            kwargs['index'] = index
+        db.Model.__init__(self, **kwargs)
 
 class Document(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -85,11 +117,21 @@ class Document(db.Model):
     last_modified = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.now())
     description = db.Column(db.String(240))
-    content = db.Column(db.String(3000))  # list of snippets?
+    content = db.Column(db.String(3000))
 
     created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
     tags = db.relationship('Tag', secondary=document_tag, backref='documents')
+    # snippets = db.relationship('Snippet', secondary=document_snippet,
+    #                            backref='documents', order_by=[document_snippet.c.index])
+
+    snippets_association = db.relationship(
+        'DocumentSnippet', 
+        back_populates='document', 
+        collection_class=ordering_list('index'),
+        order_by=[DocumentSnippet.index])
+    snippets = association_proxy('snippets_association', 'snippet',
+                                 creator=lambda snippet, index=None: DocumentSnippet(snippet=snippet, index=index))
+    # snippets = association_proxy('snippets_association', 'snippet')
 
     def to_dict(self):
         return {
@@ -100,6 +142,7 @@ class Document(db.Model):
             'content': self.content,
 
             'tags': [tag.to_dict() for tag in self.tags],
+            'snippet': [snippet.to_dict() for snippet in self.snippets],
         }
 
     def __repr__(self):
