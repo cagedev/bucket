@@ -107,25 +107,26 @@ def update_snippet(id: int) -> Response:
         snippet.content = payload['content']
 
     # TODO: Do this in a better way than set intersection
-    if 'tags' in payload:
-        new_tags = set([tag['name'] for tag in payload['tags']])
-        print(new_tags)
+    if 'tag_names' in payload:
+        new_tags = set([tag_name for tag_name in payload['tag_names']])
+        # print(f'new_tags={new_tags}')
         old_tags = {tag.name for tag in snippet.tags}
+        # print(f'old_tags={old_tags}')
 
         tags_to_remove = old_tags - new_tags
         tags_to_add = new_tags - old_tags
 
         # Remove old tags, save new tags
-        for tag in tags_to_remove:
+        for tag_name in tags_to_remove:
             # TODO: Make tags unique
-            t = Tag.query.filter_by(name=tag).first()
+            t = Tag.query.filter_by(name=tag_name).first()
             snippet.tags.remove(t)
 
         # Add new tags, check for duplicates
-        for tag in tags_to_add:
-            t = Tag.query.filter_by(name=tag).first()
+        for tag_name in tags_to_add:
+            t = Tag.query.filter_by(name=tag_name).first()
             if t == None:
-                t = Tag(name=tag)
+                t = Tag(name=tag_name)
             snippet.tags.append(t)
 
     # Update snippet in database

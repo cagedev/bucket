@@ -32,7 +32,7 @@ const template = tag('template', {
                     <!--//<button id="visibility-toggle">Hide</button>//-->
                     <input type="text" class="full-width" value="http://192.168.1.41:8888/api/snippet/2"
                         id="form-action-placeholder" />
-                    <label-selector class="full-width hideable" name="tags" value=""></label-selector>
+                    <label-selector class="full-width hideable" name="tag_names" value=""></label-selector>
                     <textarea class="full-width hideable" name="description"></textarea>
                     <latex-editor name="content" class="hideable" value=""></latex-editor>
                     <ajax-submit name="submit-button" class="hideable"></ajax-submit>

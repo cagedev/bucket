@@ -91,19 +91,19 @@ export class LabelSelector extends HTMLElement {
         Array.from(this._labelContainer.children).forEach((c) => { this._labelContainer.removeChild(c) });
 
         // Add all labels from this._labels into container
-        this._labels.forEach((label) => {
-            let labelTag = tag('span', { innerHTML: `<b>${label.name} [x]</b>`, classList: ['label'] })
+        this._labels.forEach((labelName) => {
+            let labelTag = tag('span', { innerHTML: `<b>${labelName} [x]</b>`, classList: ['label'] })
             this._labelContainer.appendChild(labelTag);
 
             // Event listener for removal (need to append first!)
             labelTag.addEventListener('click', (event) => {
-                this._removeLabel(label.name)
+                this._removeLabel(labelName)
             })
         });
     }
 
     _addLabel(value) {
-        this._labels.push({ name: value })
+        this._labels.push(value)
         this._value = JSON.stringify(this._labels);
         this._renderLabels()
     }
