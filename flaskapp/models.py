@@ -148,7 +148,7 @@ class Document(db.Model):
             'content': self.content,
 
             'tags': [tag.to_dict() for tag in self.tags],
-            'snippet': [snippet.to_dict() for snippet in self.snippets],
+            'snippets': [snippet.to_dict() for snippet in self.snippets],
         }
 
     def __repr__(self):
