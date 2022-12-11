@@ -40,6 +40,14 @@ export class AjaxSubmit extends HTMLElement {
         this._submitButton = this.shadowRoot.getElementById('submit-button');
         this._loadButton = this.shadowRoot.getElementById('load-button');
         this._statusText = this.shadowRoot.getElementById('status-text');
+
+        // TEMP
+        this._loadedEvent = new CustomEvent('AjaxSubmitReady', {
+            bubbles: true,
+            cancelable: false,
+            composed: true
+        });
+
     }
 
     connectedCallback() {
@@ -55,6 +63,9 @@ export class AjaxSubmit extends HTMLElement {
             event.preventDefault();
             this.fetchData();
         });
+
+        // TEMPORARY
+        this.dispatchEvent(this._loadedEvent);
     }
 
     sendPayload(payload) {
@@ -77,9 +88,10 @@ export class AjaxSubmit extends HTMLElement {
         }).catch((error) => {
             this.setStatus(error);
         })
-    } 
-    
+    }
+
     fetchData() {
+        console.log('fetchData()');
         let target = this._internals.form.action;
         fetch(target, {
             method: 'GET',
