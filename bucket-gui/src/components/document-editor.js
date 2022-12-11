@@ -85,7 +85,7 @@ export class DocumentEditor extends HTMLElement {
             };
         }
 
-        // TODO: Add server hostname on the fly
+        // TODO: Add server hostname on the fly -> use attributes and pass in via HTML template
         this._snippetContainer.append(
             tag('snippet-editor', {
                 'snippetId': snippetData.id,

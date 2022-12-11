@@ -68,6 +68,7 @@ export class AjaxSubmit extends HTMLElement {
         this.dispatchEvent(this._loadedEvent);
     }
 
+    // TODO: Refactor data management to parent (SnippetEditor)
     sendPayload(payload) {
         let target = this._internals.form.action;
         console.log('sendPayload()->')
@@ -90,6 +91,7 @@ export class AjaxSubmit extends HTMLElement {
         })
     }
 
+    // TODO: Refactor data management to parent (SnippetEditor)
     fetchData() {
         console.log('fetchData()');
         let target = this._internals.form.action;
