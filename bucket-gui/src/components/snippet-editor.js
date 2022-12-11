@@ -29,13 +29,12 @@ const template = tag('template', {
             <form action="" id="snippet-editor-form">
                 <details>
                     <summary>snippet-title</summary>
-                    <!--//<button id="visibility-toggle">Hide</button>//-->
-                    <input type="text" class="full-width" value="http://192.168.1.41:8888/api/snippet/2"
+                    <input type="text" class="full-width" value=""
                         id="form-action-placeholder" />
                     <label-selector class="full-width hideable" name="tag_names" value=""></label-selector>
                     <textarea class="full-width hideable" name="description"></textarea>
                     <latex-editor name="content" class="hideable" value=""></latex-editor>
-                    <ajax-submit name="submit-button" class="hideable"></ajax-submit>
+                    <ajax-submit name="submit-button" class="hideable" id="iobutton"></ajax-submit>
                 </details>
             </form>
         </div>
@@ -48,31 +47,56 @@ export class SnippetEditor extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
+        // Subcomponent references
         this._formActionHolder = this.shadowRoot.getElementById('form-action-placeholder');
         this._form = this.shadowRoot.getElementById('snippet-editor-form')
         this._visibilityToggle = this.shadowRoot.getElementById('visibility-toggle')
         this._summary = this.shadowRoot.querySelector('summary');
 
-        this._componentsVisible = true;
+        // TODO: Refactor save/load code into snippet-editor component
+        this._ajaxSubmit = this.shadowRoot.getElementById('iobutton');
+
+        // Set default property values
+        // NOTE: If set in the component these are overwritten in connectedCallback
+        // TODO: Set summary visiblity with attribute
+        // this._componentsVisible = true;
+        this._host = 'http://127.0.0.1:8000/'
+        this._route = 'api/snippet/'
         this._snippetId = -1;
+        // this._value = '';
     }
 
     connectedCallback() {
         // TODO: Prevent default enter handling
+        console.log(`connectedCallback for snippetId=${this._snippetId}`);
 
         // Set initial values for form action and snippet title
-        this._form.action = this._formActionHolder.value;
-        this._snippetId = this._formActionHolder.value.split('/').slice(-1)[0];
-        this._summary.innerHTML = `Snippet id=${this._snippetId}`;
+        // TODO: Set these based on snippetId
+        let target = `${this._host}${this._route}${this._snippetId}`;
+        this._form.action = target;
+        this._formActionHolder.value = target;
+        this._summary.innerHTML = `snippetId=${this._snippetId}`;
 
-        // Keep form action and title in sync with input
+        // REMOVE: Update snippetId and form action when target is changed manually.
         this._formActionHolder.addEventListener('change', () => {
             this._form.action = this._formActionHolder.value;
             this._snippetId = this._formActionHolder.value.split('/').slice(-1)[0];
             this._summary.innerHTML = `Snippet id=${this._snippetId}`;
         });
 
-        // Toggle editor visibility
+        console.log(`this._host=${this._host}`);
+        console.log(`this._route=${this._route}`);
+        console.log(`this._snippetId=${this._snippetId}`);
+
+        // Try to load data via AjaxSubmit
+        this.shadowRoot.addEventListener('AjaxSubmitReady', () => {
+            console.log(`Trying to fetch data`);
+            this._ajaxSubmit.fetchData();
+            console.log(`Done fetching data`);
+        });
+
+
+        // REMOVE: Toggle editor visibility
         // The show/hide button is replaced with the details/summary-tag
         // this._visibilityToggle.addEventListener('click', (event) => {
         //     event.preventDefault();
@@ -84,6 +108,31 @@ export class SnippetEditor extends HTMLElement {
         //     this._visibilityToggle.innerText = this._componentsVisible ? 'Hide' : 'Show';
         // })
     }
+
+    // TODO?: Use full snippet object?
+    // get value() { return this._value; }
+    // set value(val) { this._value = val; }
+
+    get host() { return this._host; }
+    set host(val) {
+        console.log(`setting host=${val}`);
+        this._host = val;
+    }
+
+    get route() { return this._route; }
+    set route(val) {
+        console.log(`setting route=${val}`);
+        this._route = val;
+    }
+
+    get snippetId() { return this._snippetId; }
+    set snippetId(val) { this._snippetId = val; }
+
+    // QUESTION: Are observedattributes required?
+    static get observedAttributes() {
+        return ['host', 'route', 'snippetId'];
+    }
+
 
 };
 
