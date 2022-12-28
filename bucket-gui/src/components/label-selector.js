@@ -4,17 +4,20 @@ import { tag } from "./quick-tag";
 const template = tag('template', {
     innerHTML: `
     <style>
-        .container {
-            display: flex;
+        :host {
+            display: flex;    
         }
-        .container > * {            
-            margin-right: 4px;
+        * {
+            box-sizing: border-box;
         }
         .label {
             background: lightcoral;
             border: 0px;
             padding: 0px 2px 2px 4px;
             margin-right: 4px;
+        }
+        .container {
+            display: flex;
         }
     </style>
     <div class="container">
@@ -38,11 +41,13 @@ export class LabelSelector extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+
         this._labelContainer = this.shadowRoot.getElementById('selected-labels');
         this._labelInput = this.shadowRoot.getElementById('label-input');
+        this._internals = this.attachInternals();
+        
         this._value = '[]';
         this._labels = [];
-        this._internals = this.attachInternals();
     }
 
     connectedCallback() {
