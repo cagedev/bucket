@@ -90,5 +90,6 @@ export default [
             css(),
             nodeResolve(),
         ],
+        watch: {},
     },
 ];
