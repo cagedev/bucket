@@ -98,7 +98,6 @@ const exampleData = `{
 }`;
 
 
-
 export class DocumentEditor extends HTMLElement {
     constructor() {
         super();
@@ -117,7 +116,7 @@ export class DocumentEditor extends HTMLElement {
         this._snippetContainer = this.shadowRoot.getElementById('snippet-container');
 
         this._snippetEditors = [];
-        this._snippetDividers = [];
+        // this._snippetDividers = [];
 
         // Default values depending on server
         this._host = 'http://127.0.0.1:8888/';
@@ -190,21 +189,23 @@ export class DocumentEditor extends HTMLElement {
         })
     }
 
+
     // Render the document composer
     render() {
         console.log('render-start')
         // Render the snippets
         this._snippetEditors.forEach((element, index) => {
-            console.log(index)
+            // console.log(index)
             this._snippetContainer.append(element);
-            this._snippetContainer.append(
-                tag('snippet-divider', {
-                    'position': index,
-                })
-            );
+            // this._snippetContainer.append(
+            //     tag('snippet-divider', {
+            //         'position': index,
+            //     })
+            // );
         });
         console.log('render-end')
     }
+
 
     // Remove document data
     emptyDocument() {
@@ -213,17 +214,11 @@ export class DocumentEditor extends HTMLElement {
         });
         this._snippetEditors = [];
 
-        // DEBUG: Leaves one divider
-        this._snippetContainer.childNodes.forEach((node) => {
-            node.remove();
-        });
-
-        // REMOVE
-        // this._snippetDividers.forEach((element) => {
-        //     element.remove();
-        // });
-
+        this._snippetContainer.replaceChildren();
         // this._snippetDividers = [];
+        this._docId = -1;
+        this._snippetList = [];
+        this._description = '';
     }
 
 
@@ -240,6 +235,7 @@ export class DocumentEditor extends HTMLElement {
             });
         }
     }
+
 
     // TODO: Allow passing of position
     addSnippet(snippetData, callback) {
@@ -264,7 +260,8 @@ export class DocumentEditor extends HTMLElement {
         // Keep track of snippet in DOM 
         this._snippetEditors.push(newSnippet);
 
-        // REMOVE: Manage snippet data
+        // Manage snippet data
+        // REMOVE: Use data in snippet
         this._snippetList.push(snippetData.id);
 
         if (callback) {
