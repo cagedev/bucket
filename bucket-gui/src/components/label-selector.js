@@ -1,7 +1,7 @@
 import { tag } from "./quick-tag";
 
 
-const template = tag('template', {
+const template = tag('template', {}, {
     innerHTML: `
     <style>
         :host {
@@ -11,7 +11,7 @@ const template = tag('template', {
             box-sizing: border-box;
         }
         .label {
-            background: lightcoral;
+            background: violet;
             border: 0px;
             padding: 0px 2px 2px 4px;
             margin-right: 4px;
@@ -27,8 +27,10 @@ const template = tag('template', {
     `
 })
 
+
+// TODO: Document
 /**
- * Custom HTMLElement containing a LaTeX-customized CodeMirror6 instance.
+ * Custom HTMLElement for defineing labels.
  * 
  * @class
  */
@@ -45,8 +47,7 @@ export class LabelSelector extends HTMLElement {
         this._labelContainer = this.shadowRoot.getElementById('selected-labels');
         this._labelInput = this.shadowRoot.getElementById('label-input');
         this._internals = this.attachInternals();
-        
-        this._value = '[]';
+
         this._labels = [];
     }
 
@@ -66,29 +67,22 @@ export class LabelSelector extends HTMLElement {
                 this._labelInput.value = ''
             }
         });
-
     }
 
+    // Getters and Setters
+    // NOTE: Autofilling this object requires a name,value-pair for the object where the value-setter handles the fill
     get value() {
         return this._labels;
     }
 
     set value(val) {
-        this._value = JSON.stringify(val);
         this._labels = val
         this._renderLabels()
     }
 
-    get form() {
-        return this._internals.form;
-    }
-
     get name() {
+        // BUG? Attribute may be changed, save as property?
         return this.getAttribute('name');
-    }
-
-    static get observedAttributes() {
-        return ['name', 'value'];
     }
 
     _renderLabels() {
@@ -97,7 +91,7 @@ export class LabelSelector extends HTMLElement {
 
         // Add all labels from this._labels into container
         this._labels.forEach((labelName) => {
-            let labelTag = tag('span', { innerHTML: `<b>${labelName} [x]</b>`, classList: ['label'] })
+            let labelTag = tag('span', {}, { innerHTML: `<b>${labelName} [x]</b>`, classList: ['label'] })
             this._labelContainer.appendChild(labelTag);
 
             // Event listener for removal (need to append first!)
@@ -109,7 +103,6 @@ export class LabelSelector extends HTMLElement {
 
     _addLabel(value) {
         this._labels.push(value)
-        this._value = JSON.stringify(this._labels);
         this._renderLabels()
     }
 
@@ -117,7 +110,6 @@ export class LabelSelector extends HTMLElement {
         this._labels = this._labels.filter((value, index, array) => {
             return value.name != tagValue;
         })
-        this._value = JSON.stringify(this._labels);
         this._renderLabels()
     }
 
