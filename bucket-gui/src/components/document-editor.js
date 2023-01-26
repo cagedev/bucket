@@ -1,12 +1,12 @@
 import { tag } from './quick-tag';
 import { SnippetEditor } from './snippet-editor';
-import { SnippetDivider } from './snippet-divider';
+// import { SnippetDivider } from './snippet-divider';
 
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-const template = tag('template', {
+const template = tag('template', {}, {
     innerHTML: `
     <style>
     * {
@@ -104,11 +104,13 @@ export class DocumentEditor extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        // DOM links
+        // DOM references
+        // Document form fields
         this._documentIdField = this.shadowRoot.getElementById('document-id-placeholder');
         this._descriptionField = this.shadowRoot.getElementById('document-description');
-        this._addSnippetButton = this.shadowRoot.getElementById('add-snippet');
 
+        // Document form buttons
+        this._addSnippetButton = this.shadowRoot.getElementById('add-snippet');
         this._loadDocumentButton = this.shadowRoot.getElementById('load-document');
         this._saveDocumentButton = this.shadowRoot.getElementById('save-document');
         this._emptyDocumentButton = this.shadowRoot.getElementById('empty-document');
@@ -136,9 +138,10 @@ export class DocumentEditor extends HTMLElement {
         this._description = '';
     }
 
+
     connectedCallback() {
         // DEBUG
-        console.log(`connectedCallback for docId=${this._docId}`);
+        // console.log(`connectedCallback for docId=${this._docId}`);
 
         // Set initial values
         this._documentIdField.value = this._docId;
@@ -152,6 +155,7 @@ export class DocumentEditor extends HTMLElement {
         // Update _description when _descriptionField is changed manually.
         this._descriptionField.addEventListener('change', () => {
             this._description = this._descriptionField.value;
+            // DEBUG
             // console.log(`description changed to =${this._description}`);
         });
 
@@ -192,7 +196,9 @@ export class DocumentEditor extends HTMLElement {
 
     // Render the document composer
     render() {
-        console.log('render-start')
+        // DEBUG
+        // console.log('render-start')
+
         // Render the snippets
         this._snippetEditors.forEach((element, index) => {
             // console.log(index)
@@ -203,7 +209,9 @@ export class DocumentEditor extends HTMLElement {
             //     })
             // );
         });
-        console.log('render-end')
+
+        // DEBUG
+        // console.log('render-end')
     }
 
 
@@ -223,6 +231,7 @@ export class DocumentEditor extends HTMLElement {
 
 
     // Load document from api data
+    // REMOVE: Use render
     loadDocument() {
         if (this._data.description) {
             console.log(this._data.description);
@@ -250,12 +259,12 @@ export class DocumentEditor extends HTMLElement {
         // TODO: Add in a different position and reorder
         // Add to the end of the list (editor is added on the previous postion)
         let newSnippet = tag('snippet-editor', {
-            'snippetId': snippetData.id,
-            'host': this._host,
-            'route': `${this._apiRoute}${this._snippetEndpoint}`, //'api/snippet/'
-            'draggable': true,
-            'position': this._snippetList.length
-        })
+            'url': `${this._host}${this._apiRoute}${this._snippetEndpoint}${snippetData.id}`,
+            'token': '0000',
+            'open': true
+        }, {
+            'data': snippetData,
+        });
 
         // Keep track of snippet in DOM 
         this._snippetEditors.push(newSnippet);
@@ -268,6 +277,7 @@ export class DocumentEditor extends HTMLElement {
             callback();
         }
     }
+
 
     // WIP
     // BUG Not reordering correctly, getting pretty convoluted
@@ -298,6 +308,7 @@ export class DocumentEditor extends HTMLElement {
         }
     }
 
+
     // WIP
     removeSnippet(position = -1) {
         if (position == -1) {
@@ -309,8 +320,9 @@ export class DocumentEditor extends HTMLElement {
         // else invalidposition -> do nothing or Throw error?
     }
 
+
+    // WIP: Encapsulate in object 
     saveDocument() {
-        // WIP: Encapsulate in object 
 
         // Refresh snippetList
         // QUESTION: Is this required? Data should be in sync by callback
@@ -326,6 +338,7 @@ export class DocumentEditor extends HTMLElement {
             snippets: this._snippetList,
         });
     }
+
 
     // Fetch data from api -> this._data and call loadDocument
     fetchData(callback) {
