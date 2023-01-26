@@ -5,7 +5,7 @@ import { stex } from '@codemirror/legacy-modes/mode/stex';
 import { tag } from "./quick-tag";
 
 
-const template = tag('template', {
+const template = tag('template', {}, {
     innerHTML: `
     <style>
         :host {
